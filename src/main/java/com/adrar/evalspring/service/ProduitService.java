@@ -1,8 +1,8 @@
 package com.adrar.evalspring.service;
 
-import com.adrar.evalspring.exception.produit.AllProduitNotFound;
-import com.adrar.evalspring.exception.produit.ProduitAlreadyExists;
-import com.adrar.evalspring.exception.produit.ProduitNotFound;
+import com.adrar.evalspring.exception.produit.AllProduitNotFoundException;
+import com.adrar.evalspring.exception.produit.ProduitAlreadyExistsException;
+import com.adrar.evalspring.exception.produit.ProduitNotFoundException;
 import com.adrar.evalspring.model.Produit;
 import com.adrar.evalspring.repository.ProduitRepository;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ public class ProduitService {
     //ajouter un produit
     public Produit addProduit(Produit produit) {
         if(produitRepository.existsById(produit.getId())) {
-            throw new ProduitAlreadyExists("Le produit" + produit.getNom() + "existe déjà");
+            throw new ProduitAlreadyExistsException("Le produit" + produit.getNom() + "existe déjà");
         }
         return produitRepository.save(produit);
     }
@@ -29,7 +29,7 @@ public class ProduitService {
 
     public List<Produit> getAllProduits(){
         if(produitRepository.count() == 0){
-            throw new AllProduitNotFound("La liste de produit n'existe pas");
+            throw new AllProduitNotFoundException("La liste de produit n'existe pas");
         }
         return (List<Produit>) produitRepository.findAll();
     }
@@ -39,8 +39,8 @@ public class ProduitService {
         return Optional
                 .of(produitRepository
                         .findById(id)
-                        .orElseThrow(()-> new ProduitNotFound(
-                                        "Le type avec le id suivant : " + id + " n'existe pas"
+                        .orElseThrow(()-> new ProduitNotFoundException(
+                                        "Le produit avec le id suivant : " + id + " n'existe pas"
                                 )
                         )
                 );
