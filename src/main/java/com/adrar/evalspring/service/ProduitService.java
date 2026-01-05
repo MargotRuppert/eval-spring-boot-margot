@@ -36,10 +36,14 @@ public class ProduitService {
 
     //afficher un produit via son ID
     public Optional<Produit> getProduitById(int id) {
-        if(produitRepository.existsById(id)) {
-            throw new ProduitNotFound("Le produit n'existe pas");
-        }
-        return produitRepository.findById(id);
+        return Optional
+                .of(produitRepository
+                        .findById(id)
+                        .orElseThrow(()-> new ProduitNotFound(
+                                        "Le type avec le id suivant : " + id + " n'existe pas"
+                                )
+                        )
+                );
     }
 
 }
